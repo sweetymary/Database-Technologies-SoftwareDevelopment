@@ -1,0 +1,123 @@
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL,
+    Password VARCHAR(100) NOT NULL,
+    Address VARCHAR(255),
+    PhoneNumber VARCHAR(20)
+);
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    Description TEXT,
+    Price DECIMAL(10, 2) NOT NULL,
+    QuantityAvailable INT NOT NULL,
+    ImageURL VARCHAR(255)
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY AUTO_INCREMENT,
+    UserID INT,
+    OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    TotalAmount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+CREATE TABLE OrderDetails (
+    OrderDetailID INT PRIMARY KEY AUTO_INCREMENT,
+    OrderID INT,
+    ProductID INT,
+    Quantity INT NOT NULL,
+    Subtotal DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+CREATE TABLE ProductReviews (
+    ReviewID INT PRIMARY KEY AUTO_INCREMENT,
+    ProductID INT,
+    UserID INT,
+    Rating INT NOT NULL,
+    Review TEXT,
+    ReviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+CREATE TABLE `payment` (
+  `payment_id` int(10) UNSIGNED NOT NULL,
+  `payment_amount` decimal(6,2) NOT NULL,
+  `account_no` int(10) NOT NULL,
+  `sort_code_no` int(10) NOT NULL,
+  `user_id` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+
+INSERT INTO Users (UserID, Username, Email, Password, Address, PhoneNumber) 
+VALUES 
+('1','john_doe', 'john@example.com', 'password123', '1 High Street, London, England', '07123 456789'),
+('2','jane_smith', 'jane@example.com', 'letmein', '12 Park Avenue, Manchester, England', '07890 123456'),
+('3','mike_jones', 'mike@example.com', 'qwerty', '34 King's Road, Birmingham, England', '07567 234567'),
+('4','sara_wilson', 'sara@example.com', 'abc123', '45 Queen's Gate, Edinburgh, Scotland', '07901 345678'),
+('5','chris_evans', 'chris@example.com', 'password456', '56 Castle Street, Cardiff, Wales', '07234 567890');
+
+
+INSERT INTO Products (ProductID,Name, Description, Price, QuantityAvailable, ImageURL) 
+VALUES 
+('1','MIA', 'Elegant Swiss watch with leather strap, perfect for any occasion.', 349.99, 50, './Images/pexels-sarazh-izmailov-13596383.jpg'),
+('2','ALAIA', 'Luxurious Swiss watch with gold-plated accents, a symbol of sophistication.', 449.99, 20, './Images/pexels-esranur-kalay-11596488.jpg'),
+('3','OCEAN', 'Sporty Swiss watch with chronograph feature, ideal for active lifestyles.', 349.99, 30, './Images/pexels-jnm-thapa-5350693.jpg'),
+('4','STAR', 'Professional diving watch with water resistance up to 200 meters, built for adventure.', 249.99, 10, './Images/pexels-ruslan-alekso-2410047.jpg'),
+('5','LYRA', 'Smartwatch with fitness tracking and smartphone connectivity, keeping you connected on the go.', 149.99, 40, './Images/pexels-javon-swaby-2783873.jpg');
+
+
+INSERT INTO ProductReviews (ProductID, UserID, Rating, Review, ReviewDate)
+VALUES
+(1, 1, 5, 'Absolutely love this watch! Perfect for my daily commute on the Tube.', '2024-03-01 10:00:00'),
+(2, 2, 4, 'The Luxury watch looks stunning, though a bit out of my budget.', '2024-03-02 12:30:00'),
+(3, 3, 5, 'The Sport watch is fantastic for my runs in the park. Highly recommended.', '2024-03-03 15:45:00'),
+(4, 4, 5, 'The Diver watch is rugged and reliable. Great for exploring the Scottish lochs!', '2024-03-04 11:20:00'),
+(5, 5, 4, 'Smartwatch works well and tracks my workouts accurately. A useful companion.', '2024-03-05 09:10:00');
+
+INSERT INTO Orders (UserID, OrderDate, TotalAmount) 
+VALUES 
+(1, '2024-03-01 09:30:00', 349.99),
+(2, '2024-03-02 11:45:00', 449.99),
+(3, '2024-03-03 13:15:00', 349.98),
+(4, '2024-03-04 10:00:00', 249.99),
+(5, '2024-03-05 14:30:00', 149.99),
+(1, '2024-03-06 16:45:00', 299.99),
+(3, '2024-03-07 09:00:00', 899.97),
+(2, '2024-03-08 12:15:00', 699.98),
+(4, '2024-03-09 14:30:00', 399.99),
+(5, '2024-03-10 17:00:00', 799.98);
+
+
+INSERT INTO OrderDetails (OrderID, ProductID, Quantity, Subtotal) 
+VALUES 
+(1, 1, 1, 349.99),  -- Smartwatch for Jane Smith
+(2, 2, 1, 449.99),  -- Luxury watch for Sara Wilson
+(3, 3, 1, 349.98),  -- Sport watch for Mike Jones
+(4, 4, 1, 249.99),  -- Classic watch for John Doe 
+(5, 5, 1, 149.99),  -- Diver watch for Chris Evans
+(6, 5, 1, 149.99),  -- Smartwatch for John Doe
+(7, 3, 3, 599.97),  -- Sport watch for Mike Jones
+(8, 1, 2, 599.98),  -- Classic watch for Jane Smith
+(9, 2, 1, 999.99),  -- Luxury watch for Sara Wilson
+(10, 4, 2, 399.98); -- Diver watch for Chris Evans
+
+
+INSERT INTO `payment` (`payment_id`, `payment_amount`, `account_no`, `sort_code_no`, `user_id`) VALUES
+(1001, 50.99, 123456789, 987654, 1),
+(1002, 25.99, 987654321, 123456, 2),
+(1003, 12.99, 456789123, 654321, 3),
+(1004, 35.99, 321654987, 789456, 4),
+(1005, 18.99, 789123456, 456789, 5),
+(1006, 42.99, 654987321, 321654, 1),
+(1007, 29.99, 123789456, 987123, 2),
+(1008, 14.99, 987321654, 456123, 3),
+(1009, 19.99, 456123789, 321987, 4),
+(1010, 31.99, 789456123, 123789, 5);
